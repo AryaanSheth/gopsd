@@ -23,7 +23,7 @@ const (
 
 // Interfaces
 
-type Filter func([]byte) // GPSD Server Filter function
+type Filter func(interface{}) // GPSD Server Filter function
 
 type Mode byte // Fix Mode (0: No Value, 1: No Fix, 2: 2D, 3: 3D)
 

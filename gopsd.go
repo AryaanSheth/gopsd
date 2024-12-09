@@ -33,7 +33,7 @@ func dialCommon(c net.Conn, err error) (*Session, error) {
 
 	session := &Session{
 		conn:    c,
-		reader:  bufio.NewReaderSize(c, syscallBufferSize), // Large buffer for reduced syscalls
+		reader:  bufio.NewReaderSize(c, syscallBufferSize),
 		filters: sync.Map{},
 	}
 
@@ -57,7 +57,7 @@ func (s *Session) SendCommand(command string) {
 	_, _ = s.conn.Write([]byte("?" + command + ";"))
 }
 
-// attach a filter to a class of reports
+// Attach a filter to a class of reports
 func (s *Session) AddFilter(class string, f Filter) {
 	filters, _ := s.filters.LoadOrStore(class, []Filter{})
 	s.filters.Store(class, append(filters.([]Filter), f))
@@ -76,7 +76,7 @@ func (s *Session) watchReports(done chan<- bool) {
 	defer func() { done <- true }()
 
 	scanner := bufio.NewScanner(s.reader)
-	scanner.Buffer(make([]byte, syscallBufferSize), syscallBufferSize*10) // Prevent scanner allocations
+	scanner.Buffer(make([]byte, syscallBufferSize), syscallBufferSize*10)
 
 	for scanner.Scan() {
 		lineBytes := scanner.Bytes()
@@ -86,13 +86,10 @@ func (s *Session) watchReports(done chan<- bool) {
 			continue
 		}
 
-		filtersRaw, ok := s.filters.Load(reportPeek.Class)
-		if !ok {
-			continue
-		}
-
 		if report := s.unmarshalReport(reportPeek.Class, lineBytes); report != nil {
-			s.dispatchReport(reportPeek.Class, filtersRaw.([]Filter))
+			if filtersRaw, ok := s.filters.Load(reportPeek.Class); ok {
+				s.dispatchReport(reportPeek.Class, report, filtersRaw.([]Filter))
+			}
 		}
 	}
 }
@@ -100,54 +97,54 @@ func (s *Session) watchReports(done chan<- bool) {
 // Convert a report to a struct
 func (s *Session) unmarshalReport(class string, data []byte) interface{} {
 	var report interface{}
-	var err error
-
 	switch class {
 	case "TPV":
 		var r TPV
-		err = sonic.Unmarshal(data, &r)
-		report = &r
+		if err := sonic.Unmarshal(data, &r); err == nil {
+			report = &r
+		}
 	case "SKY":
 		var r SKY
-		err = sonic.Unmarshal(data, &r)
-		report = &r
+		if err := sonic.Unmarshal(data, &r); err == nil {
+			report = &r
+		}
 	case "GST":
 		var r GST
-		err = sonic.Unmarshal(data, &r)
-		report = &r
+		if err := sonic.Unmarshal(data, &r); err == nil {
+			report = &r
+		}
 	case "ATT":
 		var r ATT
-		err = sonic.Unmarshal(data, &r)
-		report = &r
+		if err := sonic.Unmarshal(data, &r); err == nil {
+			report = &r
+		}
 	case "DEVICES":
 		var r DEVICES
-		err = sonic.Unmarshal(data, &r)
-		report = &r
+		if err := sonic.Unmarshal(data, &r); err == nil {
+			report = &r
+		}
 	case "PPS":
 		var r PPS
-		err = sonic.Unmarshal(data, &r)
-		report = &r
+		if err := sonic.Unmarshal(data, &r); err == nil {
+			report = &r
+		}
 	case "TOFF":
 		var r TOFF
-		err = sonic.Unmarshal(data, &r)
-		report = &r
+		if err := sonic.Unmarshal(data, &r); err == nil {
+			report = &r
+		}
 	case "ERROR":
 		var r ERROR
-		err = sonic.Unmarshal(data, &r)
-		report = &r
-	default:
-		return nil
-	}
-
-	if err != nil {
-		return nil
+		if err := sonic.Unmarshal(data, &r); err == nil {
+			report = &r
+		}
 	}
 	return report
 }
 
 // Call all filters for a class
-func (s *Session) dispatchReport(class string, filters []Filter) {
+func (s *Session) dispatchReport(class string, report interface{}, filters []Filter) {
 	for _, f := range filters {
-		f([]byte(class))
+		f(report)
 	}
 }
