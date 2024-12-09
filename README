@@ -1,4 +1,3 @@
-# gopsd
-A Blazingly Fast GPSD Libary for Golang
+gopsd: A Blazingly Fast GPSD Libary for Golang
 
-Inspired by [go-gpsd](https://github.com/stratoberry/go-gpsd) by stratoberry
+Inspired by go-gpsd by stratoberry
