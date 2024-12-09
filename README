@@ -1,3 +1,5 @@
 gopsd: A Blazingly Fast GPSD Libary for Golang
 
 Inspired by go-gpsd by stratoberry
+
+The goal of this project is to create a lightweight and super fast GPSD client using modern Go libraries
