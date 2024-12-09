@@ -88,7 +88,7 @@ func (s *Session) watchReports(done chan<- bool) {
 
 		if report := s.unmarshalReport(reportPeek.Class, lineBytes); report != nil {
 			if filtersRaw, ok := s.filters.Load(reportPeek.Class); ok {
-				s.dispatchReport(reportPeek.Class, report, filtersRaw.([]Filter))
+				s.dispatchReport(report, filtersRaw.([]Filter))
 			}
 		}
 	}
@@ -143,7 +143,7 @@ func (s *Session) unmarshalReport(class string, data []byte) interface{} {
 }
 
 // Call all filters for a class
-func (s *Session) dispatchReport(class string, report interface{}, filters []Filter) {
+func (s *Session) dispatchReport(report interface{}, filters []Filter) {
 	for _, f := range filters {
 		f(report)
 	}
