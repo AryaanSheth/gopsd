@@ -9,9 +9,8 @@ package gopsd
 
 import (
 	"bufio"
+	"net"
 	"sync"
-
-	gnet "github.com/panjf2000/gnet/v2"
 )
 
 // Constants
@@ -29,7 +28,7 @@ type Filter func([]byte) // GPSD Server Filter function
 type Mode byte // Fix Mode (0: No Value, 1: No Fix, 2: 2D, 3: 3D)
 
 type Session struct {
-	conn    gnet.Conn     // Client GPSD Server connection
+	conn    net.Conn      // Client GPSD Server connection
 	reader  *bufio.Reader // Client GPSD Server reader
 	filters sync.Map      // Filters for the GPSD Server
 }
