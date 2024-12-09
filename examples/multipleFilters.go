@@ -1,4 +1,4 @@
-package main
+package examples
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 )
 
 // Example: Adding Multiple Filters
-func main() {
+func multipleFilters() {
 	var gps *gopsd.Session
 	var err error
 
