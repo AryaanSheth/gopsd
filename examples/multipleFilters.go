@@ -12,9 +12,7 @@ func multipleFilters() {
 	var gps *gopsd.Session
 	var err error
 
-	address := "localhost:2947"
-
-	if gps, err = gopsd.Dial(address); err != nil {
+	if gps, err = gopsd.Dial(gopsd.DefaultAddress); err != nil {
 		panic(fmt.Sprintf("Failed to connect to GPSD: %s", err))
 	}
 	defer gps.Close()

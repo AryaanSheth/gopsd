@@ -15,10 +15,13 @@ import (
 
 // Constants
 const (
+	// mode constants
 	NoValue Mode = 0
 	NoFix   Mode = 1
 	Mode2D  Mode = 2
 	Mode3D  Mode = 3
+
+	DefaultAddress = "localhost:2947"
 )
 
 // Interfaces
