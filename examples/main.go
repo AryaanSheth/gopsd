@@ -38,7 +38,7 @@ func main() {
 	select {
 	case <-done:
 		fmt.Println("GPSD connection closed")
-	case <-time.After(5 * time.Minute):
+	case <-time.After(5 * time.Second):
 		fmt.Println("Connection timeout")
 		gps.Close()
 	}
