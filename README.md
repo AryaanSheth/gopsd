@@ -3,6 +3,7 @@
 
 :rocket: A Blazingly Fast GPSD Libary for Golang
 Inspired by [go-gpsd by stratoberry](https://github.com/stratoberry/go-gpsd/)    
+Used to interface with the Linux [GPSd](https://gpsd.gitlab.io/gpsd/) service daemon 
 
 # Download
 
